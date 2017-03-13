@@ -1,7 +1,7 @@
 {
-    "name": "ionic-calendar",
+    "name": "ionic-event-calendar",
     "version": "0.3.7",
-    "homepage": "https://github.com/twinssbc/Ionic-Calendar",
+    "homepage": "https://github.com/kovacssupki/ionic-event-calendar",
     "authors": [
         "twinssbc <bocong@hotmail.com>",
         "kovacssupki <kovacssupki@yahoo.com>"
