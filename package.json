@@ -2,7 +2,7 @@
     "name": "ionic-calendar",
     "version": "0.0.1",
     "private": false,
-    "author": "twinssbc",
+    "author": "kovacssupki",
     "engines": {
         "node": "0.10.x",
         "npm": "1.3.x"

@@ -3,9 +3,10 @@
     "version": "0.3.7",
     "homepage": "https://github.com/twinssbc/Ionic-Calendar",
     "authors": [
-        "twinssbc <bocong@hotmail.com>"
+        "twinssbc <bocong@hotmail.com>",
+        "kovacssupki <kovacssupki@yahoo.com>"
     ],
-    "description": "A calendar directive for Ionic framework",
+    "description": "An event calendar directive for Ionic framework based on twinssbc Ionic Calendar",
     "main": [
         "dist/css/calendar.css",
         "dist/js/calendar-tpls.js"

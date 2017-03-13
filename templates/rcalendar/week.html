@@ -7,7 +7,7 @@
                 <tr>
                     <th class="calendar-hour-column"></th>
                     <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date:
-                        formatWeekViewDayHeader}}
+                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>
                     </th>
                 </tr>
                 </thead>
