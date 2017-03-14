@@ -60,13 +60,13 @@ angular.module( 'ui.rCalendar', [] )
 
         $scope.$on( '$destroy', unregisterFn );
 
-        function scrollToFnc( scrollTo ) {
+        function scrollToFnc() {
             $timeout( function () {
-                var selectedElem = document.getElementById( scrollTo || $scope.scrollTo );
-                console.log( 'element to scorll to', angular.element( selectedElem ) );
-                console.log( 'element to scorll to', $ionicPosition.position( angular.element( selectedElem ) ) );
+                var slides = document.getElementsByTagName( 'ion-slide' );
+                //this will work becouse the index is starting from 0 if index starts from 1 then it has to be modified
+                var selectedElem = slides[ $ionicSlideBoxDelegate.currentIndex() ].querySelector( '#' + $scope.scrollTo );
                 $ionicScrollDelegate.scrollTo( 0, $ionicPosition.position( angular.element( selectedElem ) ).top, true );
-            }, 1000 );
+            }, 500 );
         }
         $scope.calendarMode = $scope.calendarMode || calendarConfig.calendarMode;
         $scope.eventPeriod = $scope.eventPeriod || calendarConfig.eventPeriod;
@@ -304,9 +304,10 @@ angular.module( 'ui.rCalendar', [] )
                     scope.currentViewIndex = currentViewIndex;
                     self.move( direction );
                     scope.$digest();
-                    console.log( 'Changed week or slide' );
                     if ( callback ) {
                         callback();
+                    } else {
+                        scrollToFnc();
                     }
                 }, 200 );
             };
