@@ -759,6 +759,13 @@ angular.module( 'ui.rCalendar', [] )
                 scope.allDayEventTemplateUrl = ctrl.weekviewAllDayEventTemplateUrl;
                 scope.normalEventTemplateUrl = ctrl.weekviewNormalEventTemplateUrl;
 
+                function toDate( string ) {
+                    var result = new Date( string );
+                    result.setDate( result.getDate() + 1 );
+                    return result;
+                }
+                scope.toDate = toDate;
+
                 function getDates( startTime, n ) {
                     var dates = new Array( n ),
                         current = new Date( startTime ),
@@ -1400,8 +1407,8 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start <= dt.date && eventPeriod.end <= dt.date}\" >{{::dt.date| date:\n" +
-    "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}} {{dt.date}}</span>\n" +
+    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start >= dt.date || eventPeriod.end <= dt.date}\" >{{::dt.date| date:\n" +
+    "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>\n" +
     "                    </th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
@@ -1414,13 +1421,12 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
     "                            <tbody>\n" +
     "                            <tr>\n" +
-    "                                <td ng-repeat=\"day in view.dates track by day.date\"  data-ng-class=\"{'day-disabled':eventPeriod.start <= day.date && eventPeriod.end <= day.date}\" class=\"calendar-cell\">\n" +
-    "                                  {{day.date}}\n" +
+    "                                <td ng-repeat=\"day in view.dates track by day.date\"  data-ng-class=\"{'day-disabled':eventPeriod.start >= day.date || eventPeriod.end <= day.date}\" class=\"calendar-cell\">\n" +
     "                                    <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\"\n" +
-    "                                         ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
+    "                                         ng-style=\"{height: 56*day.events.length+'px'}\">\n" +
     "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
     "                                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                             ng-style=\"{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}\"\n" +
+    "                                             ng-style=\"{top: 56*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '56px'}\"\n" +
     "                                             ng-include=\"::allDayEventTemplateUrl\">\n" +
     "                                        </div>\n" +
     "                                    </div>\n" +
@@ -1435,14 +1441,13 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
     "                            <td class=\"calendar-hour-column text-center\">\n" +
-    "                                {{::row[0].time | date: formatHourColumn}}\n" +
+    "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
     "                            </td>\n" +
-    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':eventPeriod.start <= tm.date && eventPeriod.end <= tm.date}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
-    "                              {{tm.date}}{{tm.time}}\n" +
+    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':eventPeriod.start >= tm.time || eventPeriod.end <= tm.time}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
     "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                         ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\"\n" +
+    "                                         ng-style=\"{top: (74*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 74*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\"\n" +
     "                                         ng-include=\"::normalEventTemplateUrl\">\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
@@ -1471,7 +1476,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
     "                            <td class=\"calendar-hour-column text-center\">\n" +
-    "                                {{::row[0].time | date: formatHourColumn}}\n" +
+    "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
     "                            </td>\n" +
     "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\">\n" +
     "                            </td>\n" +
