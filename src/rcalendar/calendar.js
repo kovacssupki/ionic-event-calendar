@@ -362,7 +362,7 @@ angular.module( 'ui.rCalendar', [] )
             replace: true,
             templateUrl: 'templates/rcalendar/calendar.html',
             scope: {
-                eventPeriod: '?=',
+                eventPeriod: '=?eventPeriod',
                 calendarMode: '=',
                 rangeChanged: '&',
                 eventSelected: '&',
