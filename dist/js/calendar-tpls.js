@@ -381,6 +381,8 @@ angular.module( 'ui.rCalendar', [] )
             templateUrl: 'templates/rcalendar/calendar.html',
             scope: {
                 eventPeriod: '=?eventPeriod',
+                scrollTo: '=?scrollTo',
+                scrollCallBack: '=?scrollCallBack',
                 calendarMode: '=',
                 rangeChanged: '&',
                 eventSelected: '&',
