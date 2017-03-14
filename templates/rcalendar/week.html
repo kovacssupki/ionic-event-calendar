@@ -7,7 +7,7 @@
                 <tr>
                     <th class="calendar-hour-column"></th>
                     <th class="weekview-header text-center" ng-repeat="dt in view.dates" data-ng-class="{'day-disabled':eventPeriod.start <= dt.date && eventPeriod.end <= dt.date}" >{{::dt.date| date:
-                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>
+                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}} {{dt.date}}</span>
                     </th>
                 </tr>
                 </thead>
@@ -21,6 +21,7 @@
                             <tbody>
                             <tr>
                                 <td ng-repeat="day in view.dates track by day.date"  data-ng-class="{'day-disabled':eventPeriod.start <= day.date && eventPeriod.end <= day.date}" class="calendar-cell">
+                                  {{day.date}}
                                     <div ng-class="{'calendar-event-wrap': day.events}" ng-if="day.events"
                                          ng-style="{height: 25*day.events.length+'px'}">
                                         <div ng-repeat="displayEvent in day.events" class="calendar-event"
@@ -43,6 +44,7 @@
                                 {{::row[0].time | date: formatHourColumn}}
                             </td>
                             <td ng-repeat="tm in row track by tm.time" class="calendar-cell" data-ng-class="{'day-disabled':eventPeriod.start <= tm.date && eventPeriod.end <= tm.date}"  ng-click="select(tm.time, tm.events)">
+                              {{tm.date}}{{tm.time}}
                                 <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
                                     <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                          ng-click="eventSelected({event:displayEvent.event})"
