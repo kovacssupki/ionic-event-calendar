@@ -18,6 +18,8 @@ angular.module( 'ui.rCalendar', [] )
             start: new Date(),
             end: new Date()
         },
+        scrollTo: 'hour-1',
+        scrollCallBack: function () {},
         eventSource: null,
         queryMode: 'local',
         step: 60,
@@ -29,7 +31,7 @@ angular.module( 'ui.rCalendar', [] )
         dayviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
         dayviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html'
     } )
-    .controller( 'ui.rCalendar.CalendarController', [ '$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ( $scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate ) {
+    .controller( 'ui.rCalendar.CalendarController', [ '$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPosition', function ( $scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPosition ) {
         'use strict';
         var self = this,
             ngModelCtrl = {
@@ -38,7 +40,7 @@ angular.module( 'ui.rCalendar', [] )
 
         // Configuration attributes
         angular.forEach( [ 'formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'noEventsLabel', 'eventPeriod' ], function ( key, index ) {
+            'allDayLabel', 'noEventsLabel', 'eventPeriod', 'scrollTo', 'scrollCallBack' ], function ( key, index ) {
             self[ key ] = angular.isDefined( $attrs[ key ] ) ? $interpolate( $attrs[ key ] )( $scope.$parent ) : calendarConfig[ key ];
         } );
 
@@ -59,8 +61,18 @@ angular.module( 'ui.rCalendar', [] )
 
         $scope.$on( '$destroy', unregisterFn );
 
+        function scrollToFnc( scrollTo ) {
+            $timeout( function () {
+                var selectedElem = document.getElementById( scrollTo || $scope.scrollTo );
+                console.log( 'element to scorll to', angular.element( selectedElem ) );
+                console.log( 'element to scorll to', $ionicPosition.position( angular.element( selectedElem ) ) );
+                $ionicScrollDelegate.scrollTo( 0, $ionicPosition.position( angular.element( selectedElem ) ).top, true );
+            }, 1000 );
+        }
         $scope.calendarMode = $scope.calendarMode || calendarConfig.calendarMode;
         $scope.eventPeriod = $scope.eventPeriod || calendarConfig.eventPeriod;
+        $scope.scrollCallBack = $scope.scrollCallBack || scrollToFnc;
+
         if ( angular.isDefined( $attrs.initDate ) ) {
             self.currentCalendarDate = $scope.$parent.$eval( $attrs.initDate );
         }
@@ -278,7 +290,7 @@ angular.module( 'ui.rCalendar', [] )
             }
         };
 
-        self.registerSlideChanged = function ( scope ) {
+        self.registerSlideChanged = function ( scope, callback ) {
             scope.currentViewIndex = 0;
             scope.slideChanged = function ( $index ) {
                 $timeout( function () {
@@ -293,6 +305,10 @@ angular.module( 'ui.rCalendar', [] )
                     scope.currentViewIndex = currentViewIndex;
                     self.move( direction );
                     scope.$digest();
+                    console.log( 'Changed week or slide' );
+                    if ( callback ) {
+                        callback();
+                    }
                 }, 200 );
             };
         };
@@ -731,7 +747,7 @@ angular.module( 'ui.rCalendar', [] )
                     };
                 };
 
-                ctrl.registerSlideChanged( scope );
+                ctrl.registerSlideChanged( scope, scope.$parent.scrollCallBack( scope.$parent.scrollTo ) );
 
                 ctrl.refreshView();
             }
@@ -1048,7 +1064,7 @@ angular.module( 'ui.rCalendar', [] )
                     };
                 };
 
-                ctrl.registerSlideChanged( scope );
+                ctrl.registerSlideChanged( scope, scope.$parent.scrollCallBack( scope.$parent.scrollTo ) );
 
                 ctrl.refreshView();
             }
@@ -1242,7 +1258,7 @@ angular.module( 'ui.rCalendar', [] )
                     };
                 };
 
-                ctrl.registerSlideChanged( scope );
+                ctrl.registerSlideChanged( scope, scope.$parent.scrollCallBack( scope.$parent.scrollTo ) );
 
                 ctrl.refreshView();
             }
@@ -1408,7 +1424,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
     "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start >= dt.date || eventPeriod.end <= dt.date}\" >{{::dt.date| date:\n" +
-    "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>\n" +
+    "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>{{::dt.date| date: 'MMMM'}}\n" +
     "                    </th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
@@ -1440,7 +1456,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
-    "                            <td class=\"calendar-hour-column text-center\">\n" +
+    "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
     "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
     "                            </td>\n" +
     "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':eventPeriod.start >= tm.time || eventPeriod.end <= tm.time}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
@@ -1475,7 +1491,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
-    "                            <td class=\"calendar-hour-column text-center\">\n" +
+    "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
     "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
     "                            </td>\n" +
     "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\">\n" +
