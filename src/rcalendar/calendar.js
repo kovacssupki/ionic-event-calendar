@@ -758,6 +758,13 @@ angular.module( 'ui.rCalendar', [] )
                 scope.allDayEventTemplateUrl = ctrl.weekviewAllDayEventTemplateUrl;
                 scope.normalEventTemplateUrl = ctrl.weekviewNormalEventTemplateUrl;
 
+                function toDate( string ) {
+                    var result = new Date( string );
+                    result.setDate( result.getDate() + 1 );
+                    return result;
+                }
+                scope.toDate = toDate;
+
                 function getDates( startTime, n ) {
                     var dates = new Array( n ),
                         current = new Date( startTime ),
