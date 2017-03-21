@@ -1,4 +1,4 @@
-angular.module("ui.rCalendar.tpls", ["templates/rcalendar/calendar.html","templates/rcalendar/day.html","templates/rcalendar/displayEvent.html","templates/rcalendar/month.html","templates/rcalendar/monthviewDisplayEvent.html","templates/rcalendar/monthviewEventDetail.html","templates/rcalendar/week.html"]);
+angular.module( "ui.rCalendar.tpls", [ "/lib/ionic-event-calendar/templates/rcalendar/calendar.html", "/lib/ionic-event-calendar/templates/rcalendar/day.html", "/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html", "/lib/ionic-event-calendar/templates/rcalendar/month.html", "/lib/ionic-event-calendar/templates/rcalendar/monthviewDisplayEvent.html", "/lib/ionic-event-calendar/templates/rcalendar/monthviewEventDetail.html", "/lib/ionic-event-calendar/templates/rcalendar/week.html" ] );
 angular.module( 'ui.rCalendar', [] )
     .constant( 'calendarConfig', {
         formatDay: 'dd',
@@ -24,12 +24,12 @@ angular.module( 'ui.rCalendar', [] )
         queryMode: 'local',
         step: 60,
         autoSelect: true,
-        monthviewDisplayEventTemplateUrl: 'templates/rcalendar/monthviewDisplayEvent.html',
-        monthviewEventDetailTemplateUrl: 'templates/rcalendar/monthviewEventDetail.html',
-        weekviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
-        weekviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
-        dayviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
-        dayviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html'
+        monthviewDisplayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/monthviewDisplayEvent.html',
+        monthviewEventDetailTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/monthviewEventDetail.html',
+        weekviewAllDayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html',
+        weekviewNormalEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html',
+        dayviewAllDayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html',
+        dayviewNormalEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html'
     } )
     .controller( 'ui.rCalendar.CalendarController', [ '$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPosition', function ( $scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPosition ) {
         'use strict';
@@ -378,7 +378,7 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/calendar.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/calendar.html',
             scope: {
                 eventPeriod: '=?eventPeriod',
                 scrollTo: '=?scrollTo',
@@ -415,7 +415,7 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/month.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/month.html',
             require: [ '^calendar', '?^ngModel' ],
             link: function ( scope, element, attrs, ctrls ) {
                 var ctrl = ctrls[ 0 ],
@@ -761,7 +761,7 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/week.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/week.html',
             require: '^calendar',
             link: function ( scope, element, attrs, ctrl ) {
                 scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
@@ -1078,7 +1078,7 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/day.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/day.html',
             require: '^calendar',
             link: function ( scope, element, attrs, ctrl ) {
                 scope.formatHourColumn = ctrl.formatHourColumn;
@@ -1268,244 +1268,244 @@ angular.module( 'ui.rCalendar', [] )
         };
     } ] );
 
-angular.module("templates/rcalendar/calendar.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/calendar.html",
-    "<div class=\"calendar-container\" ng-switch=\"calendarMode\">\n" +
-    "    <dayview ng-switch-when=\"day\"></dayview>\n" +
-    "    <monthview ng-switch-when=\"month\"></monthview>\n" +
-    "    <weekview ng-switch-when=\"week\"></weekview>\n" +
-    "</div>");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/calendar.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/calendar.html",
+        "<div class=\"calendar-container\" ng-switch=\"calendarMode\">\n" +
+        "    <dayview ng-switch-when=\"day\"></dayview>\n" +
+        "    <monthview ng-switch-when=\"month\"></monthview>\n" +
+        "    <weekview ng-switch-when=\"week\"></weekview>\n" +
+        "</div>" );
+} ] );
 
-angular.module("templates/rcalendar/day.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/day.html",
-    "<div class=\"dayview\">\n" +
-    "    <ion-slide-box class=\"dayview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
-    "                   show-pager=\"false\" delegate-handle=\"dayview-slide\">\n" +
-    "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
-    "            <div class=\"dayview-allday-table\">\n" +
-    "                <div class=\"dayview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
-    "                <ion-content class=\"dayview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                    <table class=\"table table-bordered dayview-allday-content-table\">\n" +
-    "                        <tbody>\n" +
-    "                        <tr>\n" +
-    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':view.allDayEvents.length>0}\"\n" +
-    "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*view.allDayEvents.length+'px'}\">\n" +
-    "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
-    "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                     ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\"\n" +
-    "                                     ng-include=\"::allDayEventTemplateUrl\">\n" +
-    "                                </div>\n" +
-    "                            </td>\n" +
-    "                            <td class=\"calendar-cell\" ng-if=\"$index!==currentViewIndex\">\n" +
-    "                            </td>\n" +
-    "                        </tr>\n" +
-    "                        </tbody>\n" +
-    "                    </table>\n" +
-    "                </ion-content>\n" +
-    "            </div>\n" +
-    "            <ion-content class=\"dayview-normal-event-container\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                <table class=\"table table-bordered table-fixed dayview-normal-event-table\"\n" +
-    "                       ng-if=\"$index===currentViewIndex\">\n" +
-    "                    <tbody>\n" +
-    "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
-    "                        <td class=\"calendar-hour-column text-center\">\n" +
-    "                            {{::tm.time | date: formatHourColumn}}\n" +
-    "                        </td>\n" +
-    "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time, tm.events)\">\n" +
-    "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
-    "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
-    "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                     ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\"\n" +
-    "                                     ng-include=\"::normalEventTemplateUrl\">\n" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                        </td>\n" +
-    "                    </tr>\n" +
-    "                    </tbody>\n" +
-    "                </table>\n" +
-    "                <table class=\"table table-bordered table-fixed dayview-normal-event-table\"\n" +
-    "                       ng-if=\"$index!==currentViewIndex\">\n" +
-    "                    <tbody>\n" +
-    "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
-    "                        <td class=\"calendar-hour-column text-center\">\n" +
-    "                            {{::tm.time | date: formatHourColumn}}\n" +
-    "                        </td>\n" +
-    "                        <td class=\"calendar-cell\">\n" +
-    "                        </td>\n" +
-    "                    </tr>\n" +
-    "                    </tbody>\n" +
-    "                </table>\n" +
-    "            </ion-content>\n" +
-    "        </ion-slide>\n" +
-    "    </ion-slide-box>\n" +
-    "</div>\n" +
-    "");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/day.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/day.html",
+        "<div class=\"dayview\">\n" +
+        "    <ion-slide-box class=\"dayview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
+        "                   show-pager=\"false\" delegate-handle=\"dayview-slide\">\n" +
+        "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
+        "            <div class=\"dayview-allday-table\">\n" +
+        "                <div class=\"dayview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
+        "                <ion-content class=\"dayview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
+        "                    <table class=\"table table-bordered dayview-allday-content-table\">\n" +
+        "                        <tbody>\n" +
+        "                        <tr>\n" +
+        "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':view.allDayEvents.length>0}\"\n" +
+        "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*view.allDayEvents.length+'px'}\">\n" +
+        "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
+        "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
+        "                                     ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\"\n" +
+        "                                     ng-include=\"::allDayEventTemplateUrl\">\n" +
+        "                                </div>\n" +
+        "                            </td>\n" +
+        "                            <td class=\"calendar-cell\" ng-if=\"$index!==currentViewIndex\">\n" +
+        "                            </td>\n" +
+        "                        </tr>\n" +
+        "                        </tbody>\n" +
+        "                    </table>\n" +
+        "                </ion-content>\n" +
+        "            </div>\n" +
+        "            <ion-content class=\"dayview-normal-event-container\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
+        "                <table class=\"table table-bordered table-fixed dayview-normal-event-table\"\n" +
+        "                       ng-if=\"$index===currentViewIndex\">\n" +
+        "                    <tbody>\n" +
+        "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
+        "                        <td class=\"calendar-hour-column text-center\">\n" +
+        "                            {{::tm.time | date: formatHourColumn}}\n" +
+        "                        </td>\n" +
+        "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time, tm.events)\">\n" +
+        "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
+        "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
+        "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
+        "                                     ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\"\n" +
+        "                                     ng-include=\"::normalEventTemplateUrl\">\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                        </td>\n" +
+        "                    </tr>\n" +
+        "                    </tbody>\n" +
+        "                </table>\n" +
+        "                <table class=\"table table-bordered table-fixed dayview-normal-event-table\"\n" +
+        "                       ng-if=\"$index!==currentViewIndex\">\n" +
+        "                    <tbody>\n" +
+        "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
+        "                        <td class=\"calendar-hour-column text-center\">\n" +
+        "                            {{::tm.time | date: formatHourColumn}}\n" +
+        "                        </td>\n" +
+        "                        <td class=\"calendar-cell\">\n" +
+        "                        </td>\n" +
+        "                    </tr>\n" +
+        "                    </tbody>\n" +
+        "                </table>\n" +
+        "            </ion-content>\n" +
+        "        </ion-slide>\n" +
+        "    </ion-slide-box>\n" +
+        "</div>\n" +
+        "" );
+} ] );
 
-angular.module("templates/rcalendar/displayEvent.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/displayEvent.html",
-    "<div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html",
+        "<div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>" );
+} ] );
 
-angular.module("templates/rcalendar/month.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/month.html",
-    "<div>\n" +
-    "    <ion-slide-box class=\"monthview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
-    "                   show-pager=\"false\" delegate-handle=\"monthview-slide\">\n" +
-    "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
-    "            <table ng-if=\"$index===currentViewIndex\" class=\"table table-bordered table-fixed monthview-datetable\">\n" +
-    "                <thead>\n" +
-    "                <tr>\n" +
-    "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
-    "                        <small>{{::day.date | date: formatDayHeader}}</small>\n" +
-    "                    </th>\n" +
-    "                </tr>\n" +
-    "                </thead>\n" +
-    "                <tbody>\n" +
-    "                <tr ng-repeat=\"row in [0,1,2,3,4,5]\">\n" +
-    "                    <td ng-repeat=\"col in [0,1,2,3,4,5,6]\" ng-click=\"select(view.dates[row*7+col])\"\n" +
-    "                        ng-class=\"getHighlightClass(view.dates[row*7+col])\" ng-include=\"::displayEventTemplateUrl\">\n" +
-    "                    </td>\n" +
-    "                </tr>\n" +
-    "                </tbody>\n" +
-    "            </table>\n" +
-    "            <table ng-if=\"$index!==currentViewIndex\" class=\"table table-bordered table-fixed monthview-datetable\">\n" +
-    "                <thead>\n" +
-    "                <tr class=\"text-center\">\n" +
-    "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
-    "                        <small>{{::day.date | date: formatDayHeader}}</small>\n" +
-    "                    </th>\n" +
-    "                </tr>\n" +
-    "                </thead>\n" +
-    "                <tbody>\n" +
-    "                <tr ng-repeat=\"row in [0,1,2,3,4,5]\">\n" +
-    "                    <td ng-repeat=\"col in [0,1,2,3,4,5,6]\">{{view.dates[row*7+col].label}}\n" +
-    "                    </td>\n" +
-    "                </tr>\n" +
-    "                </tbody>\n" +
-    "            </table>\n" +
-    "        </ion-slide>\n" +
-    "    </ion-slide-box>\n" +
-    "    <div ng-include=\"::eventDetailTemplateUrl\"></div>\n" +
-    "</div>\n" +
-    "");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/month.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/month.html",
+        "<div>\n" +
+        "    <ion-slide-box class=\"monthview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
+        "                   show-pager=\"false\" delegate-handle=\"monthview-slide\">\n" +
+        "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
+        "            <table ng-if=\"$index===currentViewIndex\" class=\"table table-bordered table-fixed monthview-datetable\">\n" +
+        "                <thead>\n" +
+        "                <tr>\n" +
+        "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
+        "                        <small>{{::day.date | date: formatDayHeader}}</small>\n" +
+        "                    </th>\n" +
+        "                </tr>\n" +
+        "                </thead>\n" +
+        "                <tbody>\n" +
+        "                <tr ng-repeat=\"row in [0,1,2,3,4,5]\">\n" +
+        "                    <td ng-repeat=\"col in [0,1,2,3,4,5,6]\" ng-click=\"select(view.dates[row*7+col])\"\n" +
+        "                        ng-class=\"getHighlightClass(view.dates[row*7+col])\" ng-include=\"::displayEventTemplateUrl\">\n" +
+        "                    </td>\n" +
+        "                </tr>\n" +
+        "                </tbody>\n" +
+        "            </table>\n" +
+        "            <table ng-if=\"$index!==currentViewIndex\" class=\"table table-bordered table-fixed monthview-datetable\">\n" +
+        "                <thead>\n" +
+        "                <tr class=\"text-center\">\n" +
+        "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
+        "                        <small>{{::day.date | date: formatDayHeader}}</small>\n" +
+        "                    </th>\n" +
+        "                </tr>\n" +
+        "                </thead>\n" +
+        "                <tbody>\n" +
+        "                <tr ng-repeat=\"row in [0,1,2,3,4,5]\">\n" +
+        "                    <td ng-repeat=\"col in [0,1,2,3,4,5,6]\">{{view.dates[row*7+col].label}}\n" +
+        "                    </td>\n" +
+        "                </tr>\n" +
+        "                </tbody>\n" +
+        "            </table>\n" +
+        "        </ion-slide>\n" +
+        "    </ion-slide-box>\n" +
+        "    <div ng-include=\"::eventDetailTemplateUrl\"></div>\n" +
+        "</div>\n" +
+        "" );
+} ] );
 
-angular.module("templates/rcalendar/monthviewDisplayEvent.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/monthviewDisplayEvent.html",
-    "{{view.dates[row*7+col].label}}");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/monthviewDisplayEvent.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/monthviewDisplayEvent.html",
+        "{{view.dates[row*7+col].label}}" );
+} ] );
 
-angular.module("templates/rcalendar/monthviewEventDetail.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/monthviewEventDetail.html",
-    "<ion-content class=\"event-detail-container\" has-bouncing=\"false\" ng-show=\"showEventDetail\" overflow-scroll=\"false\">\n" +
-    "    <table class=\"table table-bordered table-striped table-fixed event-detail-table\">\n" +
-    "        <tr ng-repeat=\"event in selectedDate.events\" ng-click=\"eventSelected({event:event})\">\n" +
-    "            <td ng-if=\"!event.allDay\" class=\"monthview-eventdetail-timecolumn\">{{::event.startTime|date: 'HH:mm'}}\n" +
-    "                -\n" +
-    "                {{::event.endTime|date: 'HH:mm'}}\n" +
-    "            </td>\n" +
-    "            <td ng-if=\"event.allDay\" class=\"monthview-eventdetail-timecolumn\">All day</td>\n" +
-    "            <td class=\"event-detail\">{{::event.title}}</td>\n" +
-    "        </tr>\n" +
-    "        <tr ng-if=\"!selectedDate.events\">\n" +
-    "            <td class=\"no-event-label\" ng-bind=\"::noEventsLabel\"></td>\n" +
-    "        </tr>\n" +
-    "    </table>\n" +
-    "</ion-content>");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/monthviewEventDetail.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/monthviewEventDetail.html",
+        "<ion-content class=\"event-detail-container\" has-bouncing=\"false\" ng-show=\"showEventDetail\" overflow-scroll=\"false\">\n" +
+        "    <table class=\"table table-bordered table-striped table-fixed event-detail-table\">\n" +
+        "        <tr ng-repeat=\"event in selectedDate.events\" ng-click=\"eventSelected({event:event})\">\n" +
+        "            <td ng-if=\"!event.allDay\" class=\"monthview-eventdetail-timecolumn\">{{::event.startTime|date: 'HH:mm'}}\n" +
+        "                -\n" +
+        "                {{::event.endTime|date: 'HH:mm'}}\n" +
+        "            </td>\n" +
+        "            <td ng-if=\"event.allDay\" class=\"monthview-eventdetail-timecolumn\">All day</td>\n" +
+        "            <td class=\"event-detail\">{{::event.title}}</td>\n" +
+        "        </tr>\n" +
+        "        <tr ng-if=\"!selectedDate.events\">\n" +
+        "            <td class=\"no-event-label\" ng-bind=\"::noEventsLabel\"></td>\n" +
+        "        </tr>\n" +
+        "    </table>\n" +
+        "</ion-content>" );
+} ] );
 
-angular.module("templates/rcalendar/week.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/rcalendar/week.html",
-    "<div class=\"weekview\">\n" +
-    "    <ion-slide-box class=\"weekview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
-    "                   show-pager=\"false\" delegate-handle=\"weekview-slide\">\n" +
-    "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
-    "            <table class=\"table table-bordered table-fixed weekview-header\">\n" +
-    "                <thead>\n" +
-    "                <tr>\n" +
-    "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start >= dt.date || eventPeriod.end <= dt.date}\" >{{::dt.date| date:\n" +
-    "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>{{::dt.date| date: 'MMMM'}}\n" +
-    "                    </th>\n" +
-    "                </tr>\n" +
-    "                </thead>\n" +
-    "            </table>\n" +
-    "            <div ng-if=\"$index===currentViewIndex\">\n" +
-    "                <div class=\"weekview-allday-table\">\n" +
-    "                    <div class=\"weekview-allday-label\" ng-bind=\"::allDayLabel\">\n" +
-    "                    </div>\n" +
-    "                    <ion-content class=\"weekview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
-    "                            <tbody>\n" +
-    "                            <tr>\n" +
-    "                                <td ng-repeat=\"day in view.dates track by day.date\"  data-ng-class=\"{'day-disabled':eventPeriod.start >= day.date || eventPeriod.end <= day.date}\" class=\"calendar-cell\">\n" +
-    "                                    <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\"\n" +
-    "                                         ng-style=\"{height: 56*day.events.length+'px'}\">\n" +
-    "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
-    "                                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                             ng-style=\"{top: 56*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '56px'}\"\n" +
-    "                                             ng-include=\"::allDayEventTemplateUrl\">\n" +
-    "                                        </div>\n" +
-    "                                    </div>\n" +
-    "                                </td>\n" +
-    "                            </tr>\n" +
-    "                            </tbody>\n" +
-    "                        </table>\n" +
-    "                    </ion-content>\n" +
-    "                </div>\n" +
-    "                <ion-content class=\"weekview-normal-event-container\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
-    "                        <tbody>\n" +
-    "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
-    "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
-    "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
-    "                            </td>\n" +
-    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':eventPeriod.start >= tm.time || eventPeriod.end <= tm.time}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
-    "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
-    "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
-    "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                         ng-style=\"{top: (74*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 74*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\"\n" +
-    "                                         ng-include=\"::normalEventTemplateUrl\">\n" +
-    "                                    </div>\n" +
-    "                                </div>\n" +
-    "                            </td>\n" +
-    "                        </tr>\n" +
-    "                        </tbody>\n" +
-    "                    </table>\n" +
-    "                </ion-content>\n" +
-    "            </div>\n" +
-    "            <div ng-if=\"$index!==currentViewIndex\">\n" +
-    "                <div class=\"weekview-allday-table\">\n" +
-    "                    <div class=\"weekview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
-    "                    <ion-content class=\"weekview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
-    "                            <tbody>\n" +
-    "                            <tr>\n" +
-    "                                <td ng-repeat=\"day in view.dates track by day.date\" class=\"calendar-cell\">\n" +
-    "                                </td>\n" +
-    "                            </tr>\n" +
-    "                            </tbody>\n" +
-    "                        </table>\n" +
-    "                    </ion-content>\n" +
-    "                </div>\n" +
-    "                <ion-content class=\"weekview-normal-event-container\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
-    "                        <tbody>\n" +
-    "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
-    "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
-    "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
-    "                            </td>\n" +
-    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\">\n" +
-    "                            </td>\n" +
-    "                        </tr>\n" +
-    "                        </tbody>\n" +
-    "                    </table>\n" +
-    "                </ion-content>\n" +
-    "            </div>\n" +
-    "        </ion-slide>\n" +
-    "    </ion-slide-box>\n" +
-    "</div>\n" +
-    "");
-}]);
+angular.module( "/lib/ionic-event-calendar/templates/rcalendar/week.html", [] ).run( [ "$templateCache", function ( $templateCache ) {
+    $templateCache.put( "/lib/ionic-event-calendar/templates/rcalendar/week.html",
+        "<div class=\"weekview\">\n" +
+        "    <ion-slide-box class=\"weekview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
+        "                   show-pager=\"false\" delegate-handle=\"weekview-slide\">\n" +
+        "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
+        "            <table class=\"table table-bordered table-fixed weekview-header\">\n" +
+        "                <thead>\n" +
+        "                <tr>\n" +
+        "                    <th class=\"calendar-hour-column\"></th>\n" +
+        "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start >= dt.date || eventPeriod.end <= dt.date}\" >{{::dt.date| date:\n" +
+        "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>{{::dt.date| date: 'MMMM'}}\n" +
+        "                    </th>\n" +
+        "                </tr>\n" +
+        "                </thead>\n" +
+        "            </table>\n" +
+        "            <div ng-if=\"$index===currentViewIndex\">\n" +
+        "                <div class=\"weekview-allday-table\">\n" +
+        "                    <div class=\"weekview-allday-label\" ng-bind=\"::allDayLabel\">\n" +
+        "                    </div>\n" +
+        "                    <ion-content class=\"weekview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
+        "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
+        "                            <tbody>\n" +
+        "                            <tr>\n" +
+        "                                <td ng-repeat=\"day in view.dates track by day.date\"  data-ng-class=\"{'day-disabled':eventPeriod.start >= day.date || eventPeriod.end <= day.date}\" class=\"calendar-cell\">\n" +
+        "                                    <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\"\n" +
+        "                                         ng-style=\"{height: 56*day.events.length+'px'}\">\n" +
+        "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
+        "                                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
+        "                                             ng-style=\"{top: 56*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '56px'}\"\n" +
+        "                                             ng-include=\"::allDayEventTemplateUrl\">\n" +
+        "                                        </div>\n" +
+        "                                    </div>\n" +
+        "                                </td>\n" +
+        "                            </tr>\n" +
+        "                            </tbody>\n" +
+        "                        </table>\n" +
+        "                    </ion-content>\n" +
+        "                </div>\n" +
+        "                <ion-content class=\"weekview-normal-event-container\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
+        "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
+        "                        <tbody>\n" +
+        "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
+        "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
+        "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
+        "                            </td>\n" +
+        "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':eventPeriod.start >= tm.time || eventPeriod.end <= tm.time}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
+        "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
+        "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
+        "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
+        "                                         ng-style=\"{top: (111*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 111*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\"\n" +
+        "                                         ng-include=\"::normalEventTemplateUrl\">\n" +
+        "                                    </div>\n" +
+        "                                </div>\n" +
+        "                            </td>\n" +
+        "                        </tr>\n" +
+        "                        </tbody>\n" +
+        "                    </table>\n" +
+        "                </ion-content>\n" +
+        "            </div>\n" +
+        "            <div ng-if=\"$index!==currentViewIndex\">\n" +
+        "                <div class=\"weekview-allday-table\">\n" +
+        "                    <div class=\"weekview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
+        "                    <ion-content class=\"weekview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
+        "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
+        "                            <tbody>\n" +
+        "                            <tr>\n" +
+        "                                <td ng-repeat=\"day in view.dates track by day.date\" class=\"calendar-cell\">\n" +
+        "                                </td>\n" +
+        "                            </tr>\n" +
+        "                            </tbody>\n" +
+        "                        </table>\n" +
+        "                    </ion-content>\n" +
+        "                </div>\n" +
+        "                <ion-content class=\"weekview-normal-event-container\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
+        "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
+        "                        <tbody>\n" +
+        "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
+        "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
+        "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
+        "                            </td>\n" +
+        "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\">\n" +
+        "                            </td>\n" +
+        "                        </tr>\n" +
+        "                        </tbody>\n" +
+        "                    </table>\n" +
+        "                </ion-content>\n" +
+        "            </div>\n" +
+        "        </ion-slide>\n" +
+        "    </ion-slide-box>\n" +
+        "</div>\n" +
+        "" );
+} ] );
