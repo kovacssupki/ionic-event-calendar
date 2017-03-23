@@ -22,7 +22,7 @@ angular.module( 'ui.rCalendar', [] )
         scrollCallBack: function () {},
         eventSource: null,
         queryMode: 'local',
-        step: 60,
+        step: 30,
         autoSelect: true,
         monthviewDisplayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/monthviewDisplayEvent.html',
         monthviewEventDetailTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/monthviewEventDetail.html',

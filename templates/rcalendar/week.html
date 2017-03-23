@@ -6,7 +6,7 @@
                 <thead>
                 <tr>
                     <th class="calendar-hour-column"></th>
-                    <th class="weekview-header text-center" ng-repeat="dt in view.dates" data-ng-class="{'day-disabled':eventPeriod.start > dt.date || eventPeriod.end < dt.date}" >{{::dt.date| date:
+                    <th class="weekview-header text-center" ng-repeat="dt in view.dates" data-ng-class="{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date}" >{{::dt.date| date:
                         formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>{{::dt.date| date: 'MMMM'}}
                     </th>
                 </tr>
@@ -20,7 +20,7 @@
                         <table class="table table-fixed weekview-allday-content-table">
                             <tbody>
                             <tr>
-                                <td ng-repeat="day in view.dates track by day.date"  data-ng-class="{'day-disabled':eventPeriod.start > day.date || eventPeriod.end < day.date}" class="calendar-cell">
+                                <td ng-repeat="day in view.dates track by day.date"  data-ng-class="{'day-disabled':eventPeriod.start > day.date || toDate(eventPeriod.end) < day.date}" class="calendar-cell">
                                     <div ng-class="{'calendar-event-wrap': day.events}" ng-if="day.events"
                                          ng-style="{height: 56*day.events.length+'px'}">
                                         <div ng-repeat="displayEvent in day.events" class="calendar-event"
@@ -42,7 +42,7 @@
                             <td class="calendar-hour-column text-center" id="hour-{{::row[0].time | date: formatHourColumn}}">
                                 {{::row[0].time | date: formatHourColumn}}:00
                             </td>
-                            <td ng-repeat="tm in row track by tm.time" class="calendar-cell" data-ng-class="{'day-disabled':eventPeriod.start > tm.time || eventPeriod.end < tm.time}"  ng-click="select(tm.time, tm.events)">
+                            <td ng-repeat="tm in row track by tm.time" class="calendar-cell" data-ng-class="{'day-disabled':eventPeriod.start > tm.time || toDate(eventPeriod.end) < tm.time}"  ng-click="select(tm.time, tm.events)">
                                 <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
                                     <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                          ng-click="eventSelected({event:displayEvent.event})"
