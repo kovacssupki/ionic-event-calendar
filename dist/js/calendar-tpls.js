@@ -1446,8 +1446,11 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date, 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }\" >{{::dt.date| date:\n" +
-    "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>{{::dt.date| date: 'MMMM'}}\n" +
+    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date, 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }\" >\n" +
+    "                      <p>{{::dt.date| date:formatWeekViewDayHeader}}\n" +
+    "                        <span>{{::dt.date| date: 'd'}}</span>\n" +
+    "                        {{::dt.date| date: 'MMMM'}}\n" +
+    "                      </p>\n" +
     "                    </th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
