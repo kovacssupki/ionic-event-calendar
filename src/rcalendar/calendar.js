@@ -766,6 +766,7 @@ angular.module( 'ui.rCalendar', [] )
                 scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
                 scope.formatHourColumn = ctrl.formatHourColumn;
                 scope.eventPeriod = scope.$parent.eventPeriod;
+                scope.today = new Date();
                 ctrl.mode = {
                     step: {
                         days: 7
