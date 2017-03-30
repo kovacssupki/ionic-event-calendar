@@ -400,6 +400,24 @@ angular.module( 'ui.rCalendar', [] )
                     calendarCtrl.init( ngModelCtrl );
                 }
 
+                function isToday( date ) {
+                    var now = new Date();
+                    if ( date.setHours( 0, 0, 0, 0 ) === now.setHours( 0, 0, 0, 0 ) ) {
+                        return true;
+                    }
+                }
+
+                function isPassedOrFuture( date ) {
+                    var now = new Date();
+                    if ( date.setHours( 0, 0, 0, 0 ) > now.setHours( 0, 0, 0, 0 ) ) {
+                        return 'future';
+                    }
+                    if ( date.setHours( 0, 0, 0, 0 ) < now.setHours( 0, 0, 0, 0 ) ) {
+                        return 'past';
+                    }
+                }
+                scope.isToday = isToday;
+                scope.isPassedOrFuture = isPassedOrFuture;
                 scope.$on( 'changeDate', function ( event, direction ) {
                     calendarCtrl.slideView( direction );
                 } );
@@ -767,7 +785,8 @@ angular.module( 'ui.rCalendar', [] )
                 scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
                 scope.formatHourColumn = ctrl.formatHourColumn;
                 scope.eventPeriod = scope.$parent.eventPeriod;
-                scope.today = new Date();
+                scope.isToday = scope.$parent.isToday;
+                scope.isPassedOrFuture = scope.$parent.isPassedOrFuture;
                 ctrl.mode = {
                     step: {
                         days: 7
@@ -1427,7 +1446,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date, 'today': today == dt.date }\" >{{::dt.date| date:\n" +
+    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date, 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }\" >{{::dt.date| date:\n" +
     "                        formatWeekViewDayHeader}} <span>{{::dt.date| date: 'd'}}</span>{{::dt.date| date: 'MMMM'}}\n" +
     "                    </th>\n" +
     "                </tr>\n" +
