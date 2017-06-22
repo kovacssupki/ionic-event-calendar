@@ -24,12 +24,12 @@ angular.module( 'ui.rCalendar', [] )
         queryMode: 'local',
         step: 60,
         autoSelect: true,
-        monthviewDisplayEventTemplateUrl: 'templates/rcalendar/monthviewDisplayEvent.html',
-        monthviewEventDetailTemplateUrl: 'templates/rcalendar/monthviewEventDetail.html',
-        weekviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
-        weekviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
-        dayviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
-        dayviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html'
+        monthviewDisplayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/monthviewDisplayEvent.html',
+        monthviewEventDetailTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/monthviewEventDetail.html',
+        weekviewAllDayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html',
+        weekviewNormalEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html',
+        dayviewAllDayEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html',
+        dayviewNormalEventTemplateUrl: '/lib/ionic-event-calendar/templates/rcalendar/displayEvent.html'
     } )
     .controller( 'ui.rCalendar.CalendarController', [ '$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$ionicPosition', function ( $scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate, $ionicScrollDelegate, $ionicPosition ) {
         'use strict';
@@ -378,7 +378,7 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/calendar.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/calendar.html',
             scope: {
                 eventPeriod: '=?eventPeriod',
                 scrollTo: '=?scrollTo',
@@ -395,7 +395,8 @@ angular.module( 'ui.rCalendar', [] )
             link: function ( scope, element, attrs, ctrls ) {
                 var calendarCtrl = ctrls[ 0 ],
                     ngModelCtrl = ctrls[ 1 ];
-
+                    scope.saveNewPhotos = scope.$parent.saveNewPhotos;
+                    scope.eventDayPhotos = scope.$parent.vm.event.event_days;
                 if ( ngModelCtrl ) {
                     calendarCtrl.init( ngModelCtrl );
                 }
@@ -405,6 +406,21 @@ angular.module( 'ui.rCalendar', [] )
                     if ( date.setHours( 0, 0, 0, 0 ) === now.setHours( 0, 0, 0, 0 ) ) {
                         return true;
                     }
+                }
+
+                function toDate( string, format ) {
+                    var result = new Date( string );
+                    result.setDate( result.getDate() + 1 );
+                    return format ? moment(result).format(format) : result.setHours( 0, 0, 0, 0 );
+                }
+                function toDateString( string, format ) {
+                    var result = new Date( string );
+                    result.setDate( result.getDate());
+                    return moment(result.setHours( 0, 0, 0, 0 )).format(format);
+                }
+                function getDayPhoto(day) {
+                    var result =  moment(day).format('YYYY-MM-DD');
+                    return scope.eventDayPhotos[result].image!== null? scope.eventDayPhotos[result].image.thumbnails.calendar_past : null;
                 }
 
                 function isPassedOrFuture( date ) {
@@ -417,6 +433,9 @@ angular.module( 'ui.rCalendar', [] )
                     }
                 }
                 scope.isToday = isToday;
+                scope.toDate = toDate;
+                scope.getDayPhoto = getDayPhoto;
+                scope.toDateString = toDateString;
                 scope.isPassedOrFuture = isPassedOrFuture;
                 scope.$on( 'changeDate', function ( event, direction ) {
                     calendarCtrl.slideView( direction );
@@ -433,7 +452,7 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/month.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/month.html',
             require: [ '^calendar', '?^ngModel' ],
             link: function ( scope, element, attrs, ctrls ) {
                 var ctrl = ctrls[ 0 ],
@@ -779,13 +798,16 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/week.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/week.html',
             require: '^calendar',
             link: function ( scope, element, attrs, ctrl ) {
                 scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
                 scope.formatHourColumn = ctrl.formatHourColumn;
                 scope.eventPeriod = scope.$parent.eventPeriod;
                 scope.isToday = scope.$parent.isToday;
+                scope.toDate = scope.$parent.toDate;
+                scope.getDayPhoto = scope.$parent.getDayPhoto;
+                scope.toDateString =scope.$parent.toDateString;
                 scope.isPassedOrFuture = scope.$parent.isPassedOrFuture;
                 ctrl.mode = {
                     step: {
@@ -797,13 +819,7 @@ angular.module( 'ui.rCalendar', [] )
                 scope.hourParts = ctrl.hourParts;
                 scope.allDayEventTemplateUrl = ctrl.weekviewAllDayEventTemplateUrl;
                 scope.normalEventTemplateUrl = ctrl.weekviewNormalEventTemplateUrl;
-
-                function toDate( string ) {
-                    var result = new Date( string );
-                    result.setDate( result.getDate() + 1 );
-                    return result;
-                }
-                scope.toDate = toDate;
+                scope.saveNewPhotos = scope.$parent.saveNewPhotos;
 
                 function getDates( startTime, n ) {
                     var dates = new Array( n ),
@@ -1098,11 +1114,14 @@ angular.module( 'ui.rCalendar', [] )
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/rcalendar/day.html',
+            templateUrl: '/lib/ionic-event-calendar/templates/rcalendar/day.html',
             require: '^calendar',
             link: function ( scope, element, attrs, ctrl ) {
                 scope.formatHourColumn = ctrl.formatHourColumn;
-
+                scope.eventPeriod = scope.$parent.eventPeriod;
+                scope.isToday = scope.$parent.isToday;
+                scope.isPassedOrFuture = scope.$parent.isPassedOrFuture;
+                scope.toDate = scope.$parent.toDate;
                 ctrl.mode = {
                     step: {
                         days: 1
@@ -1271,7 +1290,7 @@ angular.module( 'ui.rCalendar', [] )
                 ctrl._getRange = function getRange( currentDate ) {
                     var year = currentDate.getFullYear(),
                         month = currentDate.getMonth(),
-                        date = currentDate.getDate(),
+                        date = currentDate.getDate(), 
                         startTime = new Date( year, month, date ),
                         endTime = new Date( year, month, date + 1 );
 
@@ -1329,10 +1348,12 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                       ng-if=\"$index===currentViewIndex\">\n" +
     "                    <tbody>\n" +
     "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
-    "                        <td class=\"calendar-hour-column text-center\">\n" +
-    "                            {{::tm.time | date: formatHourColumn}}\n" +
+    "                        <td data-ng-cloak class=\"calendar-hour-column text-center\" id=\"hour-{{::tm.time | date: formatHourColumn}}\">\n" +
+    "                          <p data-ng-if=\"(tm.time | date: formatHourColumn)*1 === 0\" style=\" top:-1px; \">{{::tm.time | date: formatHourColumn}}:00</p>\n" +
+    "                          <p data-ng-if=\"(tm.time | date: formatHourColumn)*1 >= 1\" style=\" top:calc(111.2px * {{::tm.time | date: formatHourColumn}} - 10px); \">{{::tm.time | date: formatHourColumn}}:00</p>\n" +
     "                        </td>\n" +
-    "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time, tm.events)\">\n" +
+    "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time, tm.events)\" data-ng-class=\"{'day-disabled':toDate(eventPeriod.start) > toDate(tm.time) || toDate(eventPeriod.end) < toDate(tm.time)}\">\n" +
+    "                            <div class=\"half-hour\"></div>\n" +
     "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
@@ -1340,6 +1361,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                                     ng-include=\"::normalEventTemplateUrl\">\n" +
     "                                </div>\n" +
     "                            </div>\n" +
+    "                            <!-- <div class=\"half-hour\"></div> -->\n" +
     "                        </td>\n" +
     "                    </tr>\n" +
     "                    </tbody>\n" +
@@ -1348,7 +1370,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                       ng-if=\"$index!==currentViewIndex\">\n" +
     "                    <tbody>\n" +
     "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
-    "                        <td class=\"calendar-hour-column text-center\">\n" +
+    "                        <td class=\"calendar-hour-column text-center\" id=\"hour-{{::tm.time | date: formatHourColumn}}\">\n" +
     "                            {{::tm.time | date: formatHourColumn}}\n" +
     "                        </td>\n" +
     "                        <td class=\"calendar-cell\">\n" +
@@ -1446,11 +1468,28 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\" data-ng-class=\"{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date, 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }\" >\n" +
+    "                    <th class=\"weekview-header text-center\" id=\"day-{{toDateString(dt.date,'YYYY-MM-DD')}}\" ng-repeat=\"dt in view.dates\" style=\"position:relative;\" data-ng-class=\"{'day-disabled':toDate(eventPeriod.start) > toDate(dt.date) || toDate(eventPeriod.end) < toDate(dt.date), 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }\" >\n" +
     "                      <p>{{::dt.date| date:formatWeekViewDayHeader}}\n" +
     "                        <span>{{::dt.date| date: 'd'}}</span>\n" +
     "                        {{::dt.date| date: 'MMMM'}}\n" +
     "                      </p>\n" +
+    "                      <i class=\"icon ion-image \"  data-ng-if=\"!(toDate(eventPeriod.start) > toDate(dt.date) || toDate(eventPeriod.end) < toDate(dt.date))\" photo-management=\"day\"  for-day=\"{{toDateString(dt.date, YYYY-MM-DD)}}\" id=\"cover\" style=\"float: right;\"></i>\n" +
+    "                      <style data-ng-if=\"!(toDate(eventPeriod.start) > toDate(dt.date) || toDate(eventPeriod.end) < toDate(dt.date))\" type=\"text/css\">\n" +
+    "                      #day-{{toDateString(dt.date,'YYYY-MM-DD')}}::before{\n" +
+    "                          content:\" \";\n" +
+    "                          position:absolute;\n" +
+    "                          display:block;\n" +
+    "                          top:0;\n" +
+    "                          bottom:0;\n" +
+    "                          left:0;\n" +
+    "                          right:0;\n" +
+    "                          opacity:0.4;\n" +
+    "                          background-size: cover !important;\n" +
+    "                          background-repeat: no-repeat;\n" +
+    "                          background:url(\"{{getDayPhoto(dt.date)}}\");\n" +
+    "                          pointer-events: none;\n" +
+    "                        }\n" +
+    "                      </style>\n" +
     "                    </th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
@@ -1463,7 +1502,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
     "                            <tbody>\n" +
     "                            <tr>\n" +
-    "                                <td ng-repeat=\"day in view.dates track by day.date\"  data-ng-class=\"{'day-disabled':eventPeriod.start > day.date || toDate(eventPeriod.end) < day.date}\" class=\"calendar-cell\">\n" +
+    "                                <td ng-repeat=\"day in view.dates track by day.date\"  data-ng-class=\"{'day-disabled':toDate(eventPeriod.start) > toDate(day.date) || toDate(eventPeriod.end) < toDate(day.date)}\" class=\"calendar-cell\">\n" +
     "                                    <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\"\n" +
     "                                         ng-style=\"{height: 56*day.events.length+'px'}\">\n" +
     "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
@@ -1482,10 +1521,12 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
-    "                            <td class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
-    "                                {{::row[0].time | date: formatHourColumn}}:00\n" +
+    "                            <td data-ng-cloak class=\"calendar-hour-column text-center\" id=\"hour-{{::row[0].time | date: formatHourColumn}}\">\n" +
+    "                                <p data-ng-if=\"(row[0].time | date: formatHourColumn)*1 === 0\" style=\" top:-1px; \">{{::row[0].time | date: formatHourColumn}}:00</p>\n" +
+    "                                <p data-ng-if=\"(row[0].time | date: formatHourColumn)*1 >= 1\" style=\" top:calc(111.2px * {{::row[0].time | date: formatHourColumn}} - 10px); \">{{::row[0].time | date: formatHourColumn}}:00</p>\n" +
     "                            </td>\n" +
-    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':eventPeriod.start > tm.time || toDate(eventPeriod.end) < tm.time}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
+    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" data-ng-class=\"{'day-disabled':toDate(eventPeriod.start) > toDate(tm.time) || toDate(eventPeriod.end) < toDate(tm.time)}\"  ng-click=\"select(tm.time, tm.events)\">\n" +
+    "                              <div class=\"half-hour\"></div>\n" +
     "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
@@ -1493,6 +1534,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                         ng-include=\"::normalEventTemplateUrl\">\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
+    "                                <!-- <div class=\"half-hour\"></div> -->\n" +
     "                            </td>\n" +
     "                        </tr>\n" +
     "                        </tbody>\n" +
