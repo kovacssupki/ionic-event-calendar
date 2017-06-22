@@ -6,11 +6,28 @@
                 <thead>
                 <tr>
                     <th class="calendar-hour-column"></th>
-                    <th class="weekview-header text-center" ng-repeat="dt in view.dates" data-ng-class="{'day-disabled':eventPeriod.start > dt.date || toDate(eventPeriod.end) < dt.date, 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }" >
+                    <th class="weekview-header text-center" id="day-{{toDateString(dt.date,'YYYY-MM-DD')}}" ng-repeat="dt in view.dates" style="position:relative;" data-ng-class="{'day-disabled':toDate(eventPeriod.start) > toDate(dt.date) || toDate(eventPeriod.end) < toDate(dt.date), 'today': isToday(dt.date), 'days-pased':isPassedOrFuture(dt.date)==='past', 'future':isPassedOrFuture(dt.date)==='future' }" >
                       <p>{{::dt.date| date:formatWeekViewDayHeader}}
                         <span>{{::dt.date| date: 'd'}}</span>
                         {{::dt.date| date: 'MMMM'}}
                       </p>
+                      <i class="icon ion-image "  data-ng-if="!(toDate(eventPeriod.start) > toDate(dt.date) || toDate(eventPeriod.end) < toDate(dt.date))" photo-management="day"  for-day="{{toDateString(dt.date, YYYY-MM-DD)}}" id="cover" style="float: right;"></i>
+                      <style data-ng-if="!(toDate(eventPeriod.start) > toDate(dt.date) || toDate(eventPeriod.end) < toDate(dt.date))" type="text/css">
+                      #day-{{toDateString(dt.date,'YYYY-MM-DD')}}::before{
+                          content:" ";
+                          position:absolute;
+                          display:block;
+                          top:0;
+                          bottom:0;
+                          left:0;
+                          right:0;
+                          opacity:0.4;
+                          background-size: cover !important;
+                          background-repeat: no-repeat;
+                          background:url("{{getDayPhoto(dt.date)}}");
+                          pointer-events: none;
+                        }
+                      </style>
                     </th>
                 </tr>
                 </thead>
@@ -23,7 +40,7 @@
                         <table class="table table-fixed weekview-allday-content-table">
                             <tbody>
                             <tr>
-                                <td ng-repeat="day in view.dates track by day.date"  data-ng-class="{'day-disabled':eventPeriod.start > day.date || toDate(eventPeriod.end) < day.date}" class="calendar-cell">
+                                <td ng-repeat="day in view.dates track by day.date"  data-ng-class="{'day-disabled':toDate(eventPeriod.start) > toDate(day.date) || toDate(eventPeriod.end) < toDate(day.date)}" class="calendar-cell">
                                     <div ng-class="{'calendar-event-wrap': day.events}" ng-if="day.events"
                                          ng-style="{height: 56*day.events.length+'px'}">
                                         <div ng-repeat="displayEvent in day.events" class="calendar-event"
@@ -42,10 +59,12 @@
                     <table class="table table-bordered table-fixed weekview-normal-event-table">
                         <tbody>
                         <tr ng-repeat="row in view.rows track by $index">
-                            <td class="calendar-hour-column text-center" id="hour-{{::row[0].time | date: formatHourColumn}}">
-                                {{::row[0].time | date: formatHourColumn}}:00
+                            <td data-ng-cloak class="calendar-hour-column text-center" id="hour-{{::row[0].time | date: formatHourColumn}}">
+                                <p data-ng-if="(row[0].time | date: formatHourColumn)*1 === 0" style=" top:-1px; ">{{::row[0].time | date: formatHourColumn}}:00</p>
+                                <p data-ng-if="(row[0].time | date: formatHourColumn)*1 >= 1" style=" top:calc(111.2px * {{::row[0].time | date: formatHourColumn}} - 10px); ">{{::row[0].time | date: formatHourColumn}}:00</p>
                             </td>
-                            <td ng-repeat="tm in row track by tm.time" class="calendar-cell" data-ng-class="{'day-disabled':eventPeriod.start > tm.time || toDate(eventPeriod.end) < tm.time}"  ng-click="select(tm.time, tm.events)">
+                            <td ng-repeat="tm in row track by tm.time" class="calendar-cell" data-ng-class="{'day-disabled':toDate(eventPeriod.start) > toDate(tm.time) || toDate(eventPeriod.end) < toDate(tm.time)}"  ng-click="select(tm.time, tm.events)">
+                              <div class="half-hour"></div>
                                 <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
                                     <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                          ng-click="eventSelected({event:displayEvent.event})"
@@ -53,6 +72,7 @@
                                          ng-include="::normalEventTemplateUrl">
                                     </div>
                                 </div>
+                                <!-- <div class="half-hour"></div> -->
                             </td>
                         </tr>
                         </tbody>

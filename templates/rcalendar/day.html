@@ -28,10 +28,12 @@
                        ng-if="$index===currentViewIndex">
                     <tbody>
                     <tr ng-repeat="tm in view.rows track by $index">
-                        <td class="calendar-hour-column text-center">
-                            {{::tm.time | date: formatHourColumn}}
+                        <td data-ng-cloak class="calendar-hour-column text-center" id="hour-{{::tm.time | date: formatHourColumn}}">
+                          <p data-ng-if="(tm.time | date: formatHourColumn)*1 === 0" style=" top:-1px; ">{{::tm.time | date: formatHourColumn}}:00</p>
+                          <p data-ng-if="(tm.time | date: formatHourColumn)*1 >= 1" style=" top:calc(111.2px * {{::tm.time | date: formatHourColumn}} - 10px); ">{{::tm.time | date: formatHourColumn}}:00</p>
                         </td>
-                        <td class="calendar-cell" ng-click="select(tm.time, tm.events)">
+                        <td class="calendar-cell" ng-click="select(tm.time, tm.events)" data-ng-class="{'day-disabled':toDate(eventPeriod.start) > toDate(tm.time) || toDate(eventPeriod.end) < toDate(tm.time)}">
+                            <div class="half-hour"></div>
                             <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
                                 <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                      ng-click="eventSelected({event:displayEvent.event})"
@@ -39,6 +41,7 @@
                                      ng-include="::normalEventTemplateUrl">
                                 </div>
                             </div>
+                            <!-- <div class="half-hour"></div> -->
                         </td>
                     </tr>
                     </tbody>
@@ -47,7 +50,7 @@
                        ng-if="$index!==currentViewIndex">
                     <tbody>
                     <tr ng-repeat="tm in view.rows track by $index">
-                        <td class="calendar-hour-column text-center">
+                        <td class="calendar-hour-column text-center" id="hour-{{::tm.time | date: formatHourColumn}}">
                             {{::tm.time | date: formatHourColumn}}
                         </td>
                         <td class="calendar-cell">
