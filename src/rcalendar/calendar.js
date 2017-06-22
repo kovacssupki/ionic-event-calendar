@@ -1289,7 +1289,7 @@ angular.module( 'ui.rCalendar', [] )
                 ctrl._getRange = function getRange( currentDate ) {
                     var year = currentDate.getFullYear(),
                         month = currentDate.getMonth(),
-                        date = currentDate.getDate(),
+                        date = currentDate.getDate(), 
                         startTime = new Date( year, month, date ),
                         endTime = new Date( year, month, date + 1 );
 
